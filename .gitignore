@@ -7,7 +7,11 @@ docs/_build/
 app_media/
 app_static/
 build/
-src/
+src/django-admin-sortable2/
+src/django-import-export/
+src/webmap/static/components/
+src/example/var/
+node_modules/
 *.mo
 *.swp
 *~

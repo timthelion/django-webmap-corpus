@@ -1,0 +1,63 @@
+{% load i18n %}
+{% load static from staticfiles %}
+{% load compress %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+        {% block meta %}
+        {% endblock %}
+
+        <title>
+        {% block title %}
+	    {% trans 'Map' %} | {{ block.super }}
+        {% endblock %}
+        </title>
+
+		{% block head %}
+		{% endblock %}
+	{% block css %}
+    {% compress css file main_css %}
+		<link rel="stylesheet" href="{% static 'components/leaflet/dist/leaflet.css' %}">
+		<link rel="stylesheet" href="{% static 'components/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css' %}">
+		<link rel="stylesheet" href="{% static 'components/leaflet.markercluster/dist/MarkerCluster.css' %}">
+		<link rel="stylesheet" href="{% static 'components/leaflet.locatecontrol/dist/L.Control.Locate.css' %}">
+		<link rel="stylesheet" href="{% static 'django_webmap_corpus_1st_party/less/webmap.less' %}" type="text/less">
+     {% endcompress %}
+	{% endblock %}
+    <body>
+    {% include "webmap/modal-layers.html" %}
+    <div id="map"></div>
+    {% block body %}
+    {% endblock %}
+	</body>
+	{% block scripts %}
+        <script src="{% static 'components/jquery/dist/jquery.min.js' %}"></script>
+		<script src="{% static 'components/leaflet/dist/leaflet.js' %}"></script>
+		<script src="{% static 'components/leaflet.locatecontrol/dist/L.Control.Locate.min.js' %}"></script>
+		<script src="{% static 'components/leaflet.markercluster/dist/leaflet.markercluster.js' %}"></script>
+		<script src="{% static 'components/esri-leaflet/dist/esri-leaflet.js' %}"></script>
+		<script src="{% static 'components/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.js' %}"></script>
+		<script src="{% static 'components/leaflet-hash/leaflet-hash.js' %}"></script>
+        <script src="{% static 'components/mobile-detect/mobile-detect.min.js' %}"></script>
+        <script src="{% static 'components/bootstrap/js/transition.js' %}"></script>
+        <script src="{% static 'components/bootstrap/js/collapse.js' %}"></script>
+        <script src="{% static 'components/bootstrap/js/dropdown.js' %}"></script>
+        <script src="{% static 'components/prefixfree/prefixfree.min.js' %}"></script>
+        <script src="{% static 'components/nanoscroller/bin/javascripts/jquery.nanoscroller.js' %}"></script>
+
+
+        {% compress js %}
+            <script src="{% static 'django_webmap_corpus_1st_party/coffee/util.coffee' %}" type="text/coffeescript" charset="utf-8"></script>
+        {% endcompress %}
+        {% include 'webmap/mapjs.html' %}
+    {% endblock %}
+    {% block js %}
+    {% endblock %}
+</html>
+

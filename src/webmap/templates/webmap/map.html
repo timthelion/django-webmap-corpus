@@ -1,0 +1,34 @@
+{% extends 'webmap/map_base.html' %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+{% load compress %}
+
+{% load static from staticfiles %}
+
+{% block title %}
+	{% trans 'Map' %} | {{ block.super }}
+{% endblock %}
+{% block body %}
+{% endblock %}
+{% block js %}
+		{% compress js inline %}
+			<script type="text/coffeescript" charset="utf-8">
+
+			$('#map').fillViewport()
+
+			map = new DjangoWebmap.Map 'map'
+			map.controlPos = 'topright'
+			map
+			 .addPresetChooser()
+			 .addZoom()
+			 .addLocate()
+			 .addSearch()
+			 .loadState()
+
+			new L.Hash map
+			window.map = map
+		</script>
+	{% endcompress %}
+
+{% endblock %}

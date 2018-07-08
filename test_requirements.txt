@@ -19,6 +19,8 @@ django-constance[database]
 djangorestframework
 django-positions
 django-filter
+django-geojson
+django-compressor
 easy_thumbnails
 django_gpxpy
 django-leaflet

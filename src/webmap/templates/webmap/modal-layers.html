@@ -1,0 +1,57 @@
+<!-- TADY SE BUDE GENEROVAT OBSAH VRSTEV APOD. -->
+{% load cache %}
+{% cache 3600 modal_layers %}
+  <div id="modal-layer" class="modal fade">
+     <a class="close-me" data-dismiss="modal">X</a>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="container">
+            <div class="row">
+              {% for preset in presets %}
+              <div class="col-md-3 col-sm-6 each-view change-layer" title="{{ preset.desc }}">
+                 <a href="../{{preset.slug}}" data-dismiss="modal">
+                   <img src="{{ preset.icon.url }}" alt="{{preset.name}}" class=""/>
+                   {{ preset.name }}
+                 </a>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <b id="advanced_switch">Pokročilé nastavení</b>
+                <div id="layer_switcher"></div>
+                <div id="layer_toggles"><b id="enable_all_layers">Vše</b><b id="enable_none_layers">Nic</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
+  <div id="modal-city" class="modal fade">
+     <a class="close-me" data-dismiss="modal">X</a>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+
+        </div> -->
+        <div class="modal-body">
+          <div class="container">
+            <div class="row centred">
+            <span class="globe"></span>
+            <br><br>
+              {% for mesto in mesta %}
+                <a href="https://{{ mesto.sektor.slug}}.dopracenakole.net/">{{ mesto.sektor.name }}</a><br>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+{% endcache %}
