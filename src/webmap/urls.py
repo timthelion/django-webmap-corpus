@@ -20,4 +20,4 @@ if getattr(settings, 'REST_ENABLED', False):
     urlpatterns.append(url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')))
 
 if getattr(settings, 'FULL_MAP_ENABLED', False):
-    urlpatterns.append(url(r'^map/(?P<preset_slug>[^&]+)/$', views.FullWebmapView.as_view(), name='map'))
+    urlpatterns.append(url(r'^map/$', views.FullWebmapView.as_view(), name='map'))

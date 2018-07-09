@@ -105,7 +105,6 @@ class FullWebmapView(TemplateView):
         context['markers'] = models.Marker.objects.all()
         context['layers'] = models.OverlayLayer.objects.all()
         context['base_layers'] = models.BaseLayer.objects.all()
-        context['preset'] = models.MapPreset.objects.get(slug=preset_slug)
         context['presets'] = models.MapPreset.objects.all()
         return context
 

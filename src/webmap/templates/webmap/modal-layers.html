@@ -10,7 +10,7 @@
             <div class="row">
               {% for preset in presets %}
               <div class="col-md-3 col-sm-6 each-view change-layer" title="{{ preset.desc }}">
-                 <a href="../{{preset.slug}}" data-dismiss="modal">
+                 <a href="javascript:map.loadPreset('{{preset.slug}}')" data-dismiss="modal">
                    <img src="{{ preset.icon.url }}" alt="{{preset.name}}" class=""/>
                    {{ preset.name }}
                  </a>
