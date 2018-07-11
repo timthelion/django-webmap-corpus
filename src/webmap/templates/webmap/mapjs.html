@@ -6,6 +6,7 @@
 
 	geocodeService = new L.esri.Geocoding.geocodeService
 	DjangoWebmap.CENTER_CS = new L.LatLng 49.829896, 15.514818
+	DjangoWebmap.DEFAULT_PRESET_SLUG = 'bar'
 
 
 	class MarkerIcon extends L.DivIcon
@@ -128,10 +129,6 @@
 			super id,
 				zoomControl: false,
 
-			url = new URL(window.location.href)
-			preset_slug = url.searchParams.get("preset")
-			@preset = null
-
 			@spinner = $ '<div id="spinner">'
 			$("##{id}").prepend @spinner
 
@@ -144,8 +141,6 @@
 			@.attributionControl.setPrefix('');
 
 			@markers = {}
-
-			@loadPreset preset_slug
 
 			{# Add more content to popups when marker clicked. #}
 			@.on 'popupopen', (ev) ->
@@ -165,16 +160,19 @@
 				@
 
 		loadPreset: (preset_slug) ->
+			@clearMarkers()
 			@preset = PRESETS[preset_slug]
+			@preset_slug = preset_slug
+			@saveState()
 			for _,base_layer of BASE_LAYERS
 				base_layer.removeFrom @
 			BASE_LAYERS[@preset.base_layer.slug].addTo @
-			@clearMarkers
 			for _,overlay of @preset.overlay_layers
 				@loadMarkers overlay.url
 
 		loadMarkers: (url, onReload) ->
 			@spinner.addClass 'spinning'
+			@markers = {}
 			$.getJSON url, (json) =>
 				for marker in json["features"]
 					marker_type = MARKER_TYPES[marker.properties.marker]
@@ -205,18 +203,30 @@
 		{# functions to share map state between page reloads #}
 		saveState: ->
 			center = @getCenter()
-			DjangoWebmap.storage.setObject 'map',
+			state =
 				pos: [center.lat, center.lng]
 				zoom: @getZoom()
+				preset_slug: @preset_slug
+			DjangoWebmap.storage.setObject 'map', state
+			window.history.replaceState({}, "map", "/map/?preset="+@preset_slug+window.location.hash)
 			@
 
-		loadState: ->
-			map = DjangoWebmap.storage.getObject 'map'
+		loadState: () ->
+			url = new URL(window.location.href)
+			preset_slug = url.searchParams.get("preset")
+			state = DjangoWebmap.storage.getObject 'map'
 
-			if map?
-				@setView map.pos, map.zoom
+			if state?
+				@setView state.pos, state.zoom
+				if preset_slug == null
+					preset_slug = state.preset_slug
 			else
 				@setView DjangoWebmap.CENTER_CS, 8
+
+			if preset_slug == null
+				preset_slug == DjangoWebmap.DEFAULT_PRESET_SLUG
+
+			@loadPreset preset_slug
 			@
 
 		focusTo: (latlng) ->
