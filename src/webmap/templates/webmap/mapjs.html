@@ -29,13 +29,27 @@
 					'{{l.slug}}':
 						url: '{% url 'data' l.slug %}'
 				{% endfor %}
-
 		{% endfor %}
 
 	BASE_LAYERS =
 		{% for l in base_layers %}
 		'{{l.slug}}':
 			L.tileLayer('{{l.url}}', {maxZoom:{{l.max_zoom}}, minZoom:{{l.min_zoom}}})
+		{% endfor %}
+
+	MARKER_TYPES =
+		{% for m in markers %}
+		{{m.id}}:
+			name: '{{m.name}}'
+			slug: '{{m.slug}}'
+			desc: '{{m.desc}}'
+			remark: '{{m.remark}}'
+			default_icon: {% if m.default_icon %}'{{m.default_icon.url}}'{% else %}''{% endif %}
+			menu_icon: {% if m.default_icon %}'{{m.menu_icon.url}}'{%else%}''{% endif %}
+			line_width: {{m.line_width}}
+			line_color: '{{m.line_color}}'
+			min_zoom: {{m.minzoom}}
+			max_zoom: {{m.maxzoom}}
 		{% endfor %}
 
 	KINDS =
@@ -121,19 +135,10 @@
 			@spinner = $ '<div id="spinner">'
 			$("##{id}").prepend @spinner
 
-			if L.markerClusterGroup?
-				@markerLayerGroup = L.markerClusterGroup
-					chunkedLoading: true
-					spiderfyOnMaxZoom: false
-					showCoverageOnHover: false
-					removeOutsideVisibleBounds: true
-					disableClusteringAtZoom: 15
-					maxClusterRadius: 40
-				.addTo @
-			else
-				@markerLayerGroup = new L.layerGroup().addTo @
-				@markerLayerGroup.addLayers = (layers) ->
-					@addLayer l for l in layers
+			@markerLayerGroup = new ZoomShowHide()
+			@markerLayerGroup.addTo @
+			@markerLayerGroup.addLayers = (layers) ->
+				@addLayer l for l in layers
 
 			{# Remove default attributions. #}
 			@.attributionControl.setPrefix('');
@@ -171,17 +176,21 @@
 		loadMarkers: (url, onReload) ->
 			@spinner.addClass 'spinning'
 			$.getJSON url, (json) =>
-				marker_geojson = L.geoJson()
-				marker_geojson.addData(json)
-				@markers[url] = marker_geojson
-				@showMarkers url
+				for marker in json["features"]
+					marker_type = MARKER_TYPES[marker.properties.marker]
+					marker_geojson = L.geoJson()
+					marker_geojson.addData(marker)
+					marker_geojson.min_zoom = marker_type.min_zoom
+					marker_geojson.max_zoom = marker_type.max_zoom
+					key = url + "#" + marker["id"]
+					@markers[key] = marker_geojson
+					@showMarkers key
 				@spinner.removeClass 'spinning'
 				onReload?()
 				@
 
 		showMarkers: (key='default') ->
-			@markerLayerGroup.clearLayers()
-			@markerLayerGroup.addLayers @markers[key]
+			@markerLayerGroup.addLayer @markers[key]
 			@
 
 		filterMarkers: (kind, key='default') ->

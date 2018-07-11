@@ -13,7 +13,7 @@
     "leaflet-hash": "0.2.1",
     "leaflet.markercluster": "1.1.0",
     "leaflet.locatecontrol": "0.62.0",
-    "leaflet.zoomshowhide": "0.0.0",
+    "leaflet.zoomshowhide": "0.1.0",
     "font-awesome": "4.5.0",
     "esri-leaflet": "2.1.1",
     "esri-leaflet-geocoder": "2.2.6",
