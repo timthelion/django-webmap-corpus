@@ -182,6 +182,9 @@
 					marker_type = MARKER_TYPES[marker.properties.marker]
 					marker_geojson = null
 					if !!marker_type.default_icon
+						style =
+							"color": marker_type.line_color
+							"weight": marker_type.line_width
 						marker_icon = L.icon({
 							iconUrl: marker_type.default_icon
 							iconSize: [marker_type.default_icon_height, marker_type.default_icon_width]
@@ -196,6 +199,7 @@
 											}
 										)
 										m
+								style: style
 							}
 						)
 					else
