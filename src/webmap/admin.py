@@ -202,7 +202,7 @@ class MarkerStatusFilter(SimpleListFilter):
 
 
 class MarkerAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ('name', 'desc', 'layer', 'minzoom', 'status', 'default_icon_image', 'id', 'poi_count', 'created_at', 'last_modification')
+    list_display = ('name', 'desc', 'layer', 'minzoom', 'status', 'default_icon_image', 'default_icon_height', 'id', 'poi_count', 'created_at', 'last_modification')
     list_filter = (MarkerStatusFilter, 'layer', 'status',)
     search_fields = ('name', 'desc',)
     readonly_fields = ('poi_count', 'created_at', 'last_modification', )

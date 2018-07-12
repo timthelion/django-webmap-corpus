@@ -38,6 +38,7 @@
 			L.tileLayer('{{l.url}}', {maxZoom:{{l.max_zoom}}, minZoom:{{l.min_zoom}}})
 		{% endfor %}
 
+
 	MARKER_TYPES =
 		{% for m in markers %}
 		{{m.id}}:
@@ -46,7 +47,9 @@
 			desc: '{{m.desc}}'
 			remark: '{{m.remark}}'
 			default_icon: {% if m.default_icon %}'{{m.default_icon.url}}'{% else %}''{% endif %}
-			menu_icon: {% if m.default_icon %}'{{m.menu_icon.url}}'{%else%}''{% endif %}
+			default_icon_height: {{m.default_icon_height}}
+			default_icon_width: {{m.default_icon_width}}
+			menu_icon: {% if m.menu_icon %}'{{m.menu_icon.url}}'{%else%}''{% endif %}
 			line_width: {{m.line_width}}
 			line_color: '{{m.line_color}}'
 			min_zoom: {{m.minzoom}}
@@ -177,8 +180,26 @@
 			$.getJSON url, (json) =>
 				for marker in json["features"]
 					marker_type = MARKER_TYPES[marker.properties.marker]
-					marker_geojson = L.geoJson()
-					marker_geojson.addData(marker)
+					marker_geojson = null
+					if !!marker_type.default_icon
+						marker_icon = L.icon({
+							iconUrl: marker_type.default_icon
+							iconSize: [marker_type.default_icon_height, marker_type.default_icon_width]
+						})
+						marker_geojson = L.geoJson(
+							marker,
+							{
+								pointToLayer:
+									(feature, latlng) ->
+										m = L.marker(latlng, {
+												icon: marker_icon
+											}
+										)
+										m
+							}
+						)
+					else
+						marker_geojson = L.geoJson(marker)
 					marker_geojson.min_zoom = marker_type.min_zoom
 					marker_geojson.max_zoom = marker_type.max_zoom
 					key = url + "#" + marker["id"]
