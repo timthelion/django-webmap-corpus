@@ -95,10 +95,11 @@
 			@container.style.backgroundColor = 'white'
 			@container.style.width = '30px'
 			@container.style.height = '30px'
-			@container.onclick = =>
-				console.log('buttonClicked')
+			@container.onclick = (e) =>
+				$('#modal-layer').modal('toggle')
+			$(".change-layer").click((event) =>
+				map.loadPreset(event.currentTarget.dataset.presetslug))
 			@container
-
 
 	class FruitPopup extends L.Popup
 		constructor: (fruit, options) ->
