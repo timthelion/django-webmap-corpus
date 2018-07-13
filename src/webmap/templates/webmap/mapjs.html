@@ -25,17 +25,26 @@
 			show_to_mapper: {% if p.status.show_to_mapper %}true{% else %}false{% endif %}
 			base_layer:
 				slug: '{{p.base_layer.slug}}'
+			{% if p.overlay_layers.all %}
 			overlay_layers:
 				{% for l in p.overlay_layers.all %}
 					'{{l.slug}}':
 						url: '{% url 'data' l.slug %}'
 				{% endfor %}
+			{% endif %}
 		{% endfor %}
 
 	BASE_LAYERS =
 		{% for l in base_layers %}
 		'{{l.slug}}':
-			L.tileLayer('{{l.url}}', {maxZoom:{{l.max_zoom}}, minZoom:{{l.min_zoom}}})
+			{% if l.server_type == "tile" %}
+			L.tileLayer('{{l.url}}', {
+			{% elif l.server_type == "wms" %}
+			L.tileLayer.wms('{{l.url}}', {layers: '{{l.layers}}',
+			{% endif %}maxZoom:{{l.max_zoom}}, minZoom:{{l.min_zoom}}, opacity:{{l.opacity}},
+			{% if l.overlay %}overlay: '{{l.overlay.slug}}'{% endif %}
+			})
+
 		{% endfor %}
 
 
@@ -170,9 +179,14 @@
 			@saveState()
 			for _,base_layer of BASE_LAYERS
 				base_layer.removeFrom @
-			BASE_LAYERS[@preset.base_layer.slug].addTo @
+			@loadBaseLayer @preset.base_layer.slug
 			for _,overlay of @preset.overlay_layers
 				@loadMarkers overlay.url
+
+		loadBaseLayer: (slug) ->
+			BASE_LAYERS[slug].addTo @
+			if BASE_LAYERS[slug].options.overlay?
+				@loadBaseLayer BASE_LAYERS[slug].options.overlay
 
 		loadMarkers: (url, onReload) ->
 			@spinner.addClass 'spinning'

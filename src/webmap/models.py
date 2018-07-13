@@ -357,6 +357,18 @@ class License(models.Model):
 
 @python_2_unicode_compatible
 class BaseLayer(Layer):
+
+    SERVER_TYPES = ("tile", "wms")
+
+    server_type = models.CharField(
+        null=False,
+        blank=False,
+        default="tile",
+        verbose_name=_("Tile server type"),
+        choices=zip(SERVER_TYPES, SERVER_TYPES),
+        max_length=60,
+    )
+
     url = models.CharField(
         null=True,
         blank=True,
@@ -365,11 +377,34 @@ class BaseLayer(Layer):
         max_length=255,
     )
 
+    layers = models.CharField(
+        null=True,
+        blank=True,
+        verbose_name=_("layers"),
+        help_text=_(u"ONLY applies to WMS layers"),
+        max_length=255,
+    )
+
+    opacity = models.FloatField(
+        null=False,
+        blank=False,
+        default=1
+    )
+
     max_zoom = models.IntegerField(
         default=18,
     )
     min_zoom = models.IntegerField(
         default=5,
+    )
+
+    overlay = models.ForeignKey(
+        'BaseLayer',
+        verbose_name=_("overlay"),
+        default=None,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL
     )
 
     class Meta:
