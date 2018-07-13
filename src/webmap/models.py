@@ -407,6 +407,17 @@ class BaseLayer(Layer):
         on_delete=models.SET_NULL
     )
 
+    className = models.CharField(
+        null=True,
+        blank=True,
+        default='',
+        verbose_name=_("Class name"),
+        help_text=_(u"name of CSS class to apply to layer"),
+        max_length=255,
+    )
+
+
+
     class Meta:
         verbose_name = _(u"base layer")
         verbose_name_plural = _(u"base layers")

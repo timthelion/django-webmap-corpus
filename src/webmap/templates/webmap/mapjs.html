@@ -43,6 +43,7 @@
 			L.tileLayer.wms('{{l.url}}', {layers: '{{l.layers}}',
 			{% endif %}maxZoom:{{l.max_zoom}}, minZoom:{{l.min_zoom}}, opacity:{{l.opacity}},
 			{% if l.overlay %}overlay: '{{l.overlay.slug}}'{% endif %}
+			{% if l.className %}className: '{{l.className}}'{% endif %}
 			})
 
 		{% endfor %}
