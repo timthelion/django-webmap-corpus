@@ -24,10 +24,10 @@
 	{% block css %}
     {% compress css file main_css %}
 		<link rel="stylesheet" href="{% static 'components/bootstrap/less/bootstrap.less' %}" type="text/less">
+		<link rel="stylesheet" href="{% static 'components/font-awesome/css/font-awesome.min.css' %}">
 		<link rel="stylesheet" href="{% static 'components/leaflet/dist/leaflet.css' %}">
 		<link rel="stylesheet" href="{% static 'components/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css' %}">
 		<link rel="stylesheet" href="{% static 'components/leaflet.markercluster/dist/MarkerCluster.css' %}">
-		<link rel="stylesheet" href="{% static 'components/leaflet.locatecontrol/dist/L.Control.Locate.css' %}">
 		<link rel="stylesheet" href="{% static 'django_webmap_corpus_1st_party/less/webmap.less' %}" type="text/less">
      {% endcompress %}
 	{% endblock %}
@@ -42,6 +42,7 @@
 		<script src="{% static 'components/leaflet/dist/leaflet.js' %}"></script>
 		<script src="{% static 'components/leaflet.locatecontrol/dist/L.Control.Locate.min.js' %}"></script>
 		<script src="{% static 'components/leaflet.zoomshowhide/dist/leaflet-zoom-show-hide.js' %}"></script>
+		<script src="{% static 'components/leaflet-side-by-side/leaflet-side-by-side.js' %}"></script>
 		<script src="{% static 'components/leaflet.markercluster/dist/leaflet.markercluster.js' %}"></script>
 		<script src="{% static 'components/esri-leaflet/dist/esri-leaflet.js' %}"></script>
 		<script src="{% static 'components/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.js' %}"></script>

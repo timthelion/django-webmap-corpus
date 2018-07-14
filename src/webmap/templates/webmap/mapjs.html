@@ -99,6 +99,7 @@
 
 	class PresetChooser extends L.Control
 		options:
+		    icon: 'leaflet-control-layers-toggle'
 			postion: 'topleft'
 
 		onAdd: (map) ->
@@ -106,12 +107,13 @@
 				'div',
 				'leaflet-bar leaflet-control leaflet-control-custom')
 			@container.style.backgroundColor = 'white'
-			@container.style.width = '30px'
-			@container.style.height = '30px'
+			@container.style.width = '45px'
+			@container.style.height = '45px'
 			@container.onclick = (e) =>
 				$('#modal-layer').modal('toggle')
 			$(".change-layer").click((event) =>
 				map.loadPreset(event.currentTarget.dataset.presetslug))
+			L.DomUtil.create("span", @options.icon, @container);
 			@container
 
 	class FruitPopup extends L.Popup
@@ -308,8 +310,7 @@
 
 		addLocate: ->
 			L.control.locate
-				icon: 'locator',
-				iconLoading: 'locator busy'
+				icon: 'fa-crosshairs fa',
 				position: @controlPos
 				strings:
 					title: "{% trans 'Show me where I am' %}"
