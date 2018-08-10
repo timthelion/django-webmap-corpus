@@ -4,17 +4,28 @@
 {% compress js inline %}
 	<script type="text/coffeescript" charset="utf-8">
 
+	class Panel
+		constructor: () ->
+			@update_position()
+
+		update_position: () ->
+			holder = $('.panel_switch_holder')
+			switch_ = $('.panel_switch')
+			panel_w = $('#panel').width()
+			window_height = $('body').height()
+
+			$(holder).css({
+				'top' : 0,
+				'left' : (panel_w) + 'px'
+			})
+			$(switch_).css({
+				'top' : (window_height / 2) + 'px',
+				'left' : (panel_w) + 'px'
+			})
+
 	geocodeService = new L.esri.Geocoding.geocodeService
 	DjangoWebmap.CENTER_CS = new L.LatLng 49.829896, 15.514818
 	DjangoWebmap.DEFAULT_PRESET_SLUG = 'bar'
-
-
-	class MarkerIcon extends L.DivIcon
-		constructor: (color, char) ->
-			super
-				className: 'marker',
-				iconSize: null,
-				html: "<span style='color:##{ color }'>&#x#{ char }</span>"
 
 	PRESETS =
 		{% for p in presets %}
@@ -45,7 +56,6 @@
 			{% if l.overlay %}overlay: '{{l.overlay.slug}}'{% endif %}
 			{% if l.className %}className: '{{l.className}}'{% endif %}
 			})
-
 		{% endfor %}
 
 
@@ -65,24 +75,6 @@
 			min_zoom: {{m.minzoom}}
 			max_zoom: {{m.maxzoom}}
 		{% endfor %}
-
-	KINDS =
-		'F00D':
-			icon: new MarkerIcon('555', 'F00D')
-			name: "{% trans 'Fruit kind' %}"
-		{% for k in kinds %}
-		'{{ k.key }}':
-			icon: new MarkerIcon('{{ k.color }}', '{{ k.key }}')
-			name: '{{ k.name }}'
-		{% endfor %}
-
-	class DjangoWebmap.Marker extends L.Marker
-		constructor: (latlng, @kind) ->
-			super latlng, icon: KINDS[@kind].icon
-
-		setIcon: (kind) ->
-			super KINDS[kind].icon
-
 
 	getDMSCoords = (lat, lng) ->
 		DD2DMS = (dd) ->
@@ -115,28 +107,6 @@
 				map.loadPreset(event.currentTarget.dataset.presetslug))
 			L.DomUtil.create("span", @options.icon, @container);
 			@container
-
-	class FruitPopup extends L.Popup
-		constructor: (fruit, options) ->
-			super options
-			@_header = "<h4><a href='/fruit/detail/#{ fruit.id }/'>#{ KINDS[fruit.kind].name }" +
-				"<br><small>(#{getDMSCoords fruit.lat, fruit.lng})</small></a></h4>"
-
-		setContent: (content) ->
-			@_content = @_header + content
-			@.update()
-			@
-
-
-	class PopupMarker extends DjangoWebmap.Marker
-		constructor: (fruit) ->
-			@fruit = fruit
-			super [fruit.lat, fruit.lng], fruit.kind
-
-			@bindPopup new FruitPopup fruit,
-				offset: new L.Point(0, -26)
-				maxWidth: 200
-
 
 	class DjangoWebmap.Map extends L.Map
 		constructor: (id) ->
@@ -175,8 +145,9 @@
 							"#{address}</p>" + content if address
 				@
 
-		loadPreset: (preset_slug) ->
-			@clearMarkers()
+		loadPreset: (preset_slug, clear=true) ->
+			if clear?
+				@clearMarkers()
 			@preset = PRESETS[preset_slug]
 			@preset_slug = preset_slug
 			@saveState()

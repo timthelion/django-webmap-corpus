@@ -1,0 +1,61 @@
+{% load static %}
+<div id="panel">
+ <span class="panel_switch_holder">
+   <a class="panel_switch" href="#"></a>
+ </span>
+ <!-- closed/hidden panel -->
+ <div class="row dildo hide">
+    <a class="home" href="https://mapa.prahounakole.cz"><img src="{% static "css/prazak.png" %}" alt="mapa.prahounakole.cz" width="48" height="46">
+     </a>
+ </div>
+
+ <!-- The full panel -->
+ <div class="row gold">
+   <nav class="col-md-10 col-md-offset-1">
+     <div class="row centred">
+       <div class="col-md-12 logo">
+         {% block logo %}
+         Unbranded map<br/>Overwrite with block logo.
+         {% endblock %}
+       </div>
+       <div class="row nav nav-tabs">
+         <div class="col-md-3">
+           <a data-toggle="tab" href="#search" class="tab_switch active">
+             <span class="fa-search fa"></span>
+             <label>Search</label>
+           </a>
+         </div>
+         {% block tabs %}
+         <div class="col-md-3">
+           <a data-toggle="tab" href="#other-tab" class="tab_switch active">
+             <span class="sprite btn mode-btn"></span>
+             <label>Add tabs with block tabs</label>
+           </a>
+         </div>
+         {% endblock %}
+       </div>
+     </div>
+   </nav>
+   <article>
+     <div id="content" class="col-md-10 col-md-offset-1 tab-content">
+       <div id="poi_box" class="row">
+         <div class="col-md-12 detail">
+           <div id="poi_text" class="cont"></div>
+         </div>
+       </div>
+       <!-- here comes the treasure -->
+       <div id="panel-content">
+          <div id="search" class="panel row tab-pane">
+          foo
+          fkljflkds
+          </div>
+          <div id="other-tab" class="panel row tab-pane">
+          fkdsljůakjfůjůjůůůůůů
+          </div>
+       </div>
+     </div>
+
+   </article>
+ </div>
+</div>
+
